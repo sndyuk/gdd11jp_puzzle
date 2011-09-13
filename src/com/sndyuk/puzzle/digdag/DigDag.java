@@ -33,7 +33,7 @@ public abstract class DigDag implements Iterable<List<History>>, Iterator<List<H
         this.board = start;
         this.size = start.panels.length * start.panels[0].length;
         this.collectionId = HistoryBase.DBNAME + (++suffixNo);
-        this.db = new MemBase(TRESHOLD);
+        this.db = new MemBase(TRESHOLD / 13);
         this.coll = db.getCollection(collectionId);
     }
 

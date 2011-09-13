@@ -62,25 +62,7 @@ public final class Board {
                 barr[i++] = (byte)panels[y][x].code.hash;
             }
         }
-        return shrink(barr);
-    }
-
-    private BitSet shrink(byte[] barr) {
-
-        // try {
-        // Deflater compresser = new Deflater(Deflater.FILTERED);
-        // ByteArrayOutputStream out = new ByteArrayOutputStream();
-        // DeflaterOutputStream dos = new DeflaterOutputStream(out,
-        // compresser);
-        // for (char c : carr) {
-        // dos.write(c);
-        // }
-        // dos.finish();
-
         return BitSet.valueOf(barr);
-        // } catch (Exception e) {
-        // throw new RuntimeException(e);
-        // }
     }
 
     public String toString() {

@@ -21,10 +21,11 @@ public final class DigDagBfs extends DigDag {
 	public HistoryBfs currHis;
 	private HistoryBfs topRank;
 	private History goal;
-	private int cacheAllUntil;
+	private int rmCacheIndex;
 	private int allCacheCntDown;
 
 	// ---
+	private final int removeCacheSize;
 	private final BitSet goalId;
 	private final int maxDepth;
 	private final int maxCacheSizeByDepth;
@@ -32,30 +33,31 @@ public final class DigDagBfs extends DigDag {
 	// ---
 	private LinkedList<HistoryBfs> queue;
 	private Queue<HistoryBfs> tmpQueue;
-	private List<HistoryBfs> removeCache;
-	
+	@SuppressWarnings("rawtypes")
+	private List[] removeCache;
+
 	public DigDagBfs(Board start, boolean asc) {
 		super(start);
-		
+
 		this.aveWH2 = ((board.panels.length + board.panels[0].length) / 2) * 2;
-		if (aveWH2 <= Board.Utils.getBlockCnt(start, 0, board.panels[0].length, 0, board.panels.length)) {
-			this.maxCacheSizeByDepth = TRESHOLD;	
+		if (aveWH2 <= Board.Utils.getBlockCnt(start, 0, board.panels[0].length,
+				0, board.panels.length)) {
+			this.maxCacheSizeByDepth = TRESHOLD;
 		} else {
 			this.maxCacheSizeByDepth = TRESHOLD / 10;
 		}
 		this.goalId = Board.Utils.createFinalForm(start).createUniqueId();
+		
 		// this.maxDepth = getAllDistance() + (size * 6); //take it to
 		this.maxDepth = 180;
-//		int cSize = size
-//				- (Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0,
-//						board.panels.length) * 2);
-//		this.allCacheCntDown = cSize <= 20 ? 18 : cSize <= 24 ? 20 : 14;
-		this.allCacheCntDown = 12;
-		this.cacheAllUntil = 16;
+		this.removeCacheSize = 9;
+		int cSize = size - (Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0, board.panels.length) * 2);
+		this.allCacheCntDown = cSize <= 20 ? 15 : cSize <= 24 ? 13 : 11;
+		this.rmCacheIndex = 0;
 
 		this.queue = new LinkedList<>();
 		this.tmpQueue = new PriorityQueue<>();
-		this.removeCache = new ArrayList<>(TRESHOLD);
+		this.removeCache = new List[removeCacheSize];
 		this.currHis = new HistoryBfs(dag.createUniqueId(), null, null, 0);
 		currHis.asc = asc;
 		this.topRank = currHis;
@@ -84,36 +86,29 @@ public final class DigDagBfs extends DigDag {
 			if (tmpQueue.size() > 0) {
 				if (allCacheCntDown >= 0) {
 					allCacheCntDown--;
-				} else {
-					if (--cacheAllUntil < 0) {
-						for (HistoryBfs his : removeCache) {
+				} else if (removeCache[removeCacheSize - 1] != null) {
+					
+						@SuppressWarnings("unchecked")
+						List<HistoryBfs> rm = removeCache[removeCacheSize - rmCacheIndex];
+						for (HistoryBfs his : rm) {
 							removeHistory(his);
 						}
-						cacheAllUntil = 16;
-					}
+						removeCache[removeCacheSize - rmCacheIndex] = null;
 				}
-
-//				if (allCacheCntDown == 0) {
-//					queue = new LinkedList<>();
-//					for (int i = 0, x = tmpQueue.size() - 1000; i < x; i++) {
-//						removeHistory(tmpQueue.poll());
-//					}
-//					for (int i = 0, x = tmpQueue.size(); i < x; i++) {
-//						queue.add(tmpQueue.poll());
-//					}
-//				} else {
-					queue = new LinkedList<>(tmpQueue);
-//				}
+				if (rmCacheIndex == removeCacheSize) {
+					rmCacheIndex = 0;
+				}
+				queue = new LinkedList<>(tmpQueue);
 				HistoryBfs depthTop = queue.getLast();
 				topRank = depthTop;
 
 				System.out.println(digCnt + " : " + currHis.depth + " :rank "
 						+ topRank.rank + " :" + this.hashCode());
 				System.out.println("direction asc: " + topRank.asc);
-				
-				removeCache.addAll(queue);
+
 				if (allCacheCntDown <= 0) {
 					tmpQueue = new PriorityQueue<>(maxCacheSizeByDepth + 1);
+					removeCache[rmCacheIndex++] = new ArrayList<>(queue);
 				} else {
 					tmpQueue = new LinkedList<>();
 				}
@@ -155,19 +150,18 @@ public final class DigDagBfs extends DigDag {
 
 		int rank = calcRank(cmd, cmds, targetPanel, p);
 		currHis.rank = rank;
-		
+
 		if (allCacheCntDown <= 0) {
 
 			if (getHistory(currHis.dagCode) == null
-//					|| checkLoopR(currHis) == -1
-//					|| checkLoop(currHis) == -1
-				) {
+			// || checkLoopR(currHis) == -1
+			// || checkLoop(currHis) == -1
+			) {
 
 				if (isWrongWay(currHis, aveWH2) <= 0) {
 					addHistory(currHis);
 					tmpQueue.add((HistoryBfs) currHis);
-					if (currHis.depth >= cacheAllUntil
-							&& tmpQueue.size() > maxCacheSizeByDepth) {
+					if (tmpQueue.size() > maxCacheSizeByDepth) {
 						removeHistory(tmpQueue.poll());
 					}
 				}
@@ -185,21 +179,21 @@ public final class DigDagBfs extends DigDag {
 
 		next(cmds, hisList);
 	}
-	
+
 	private int isWrongWay(HistoryBfs his, int backCnt) {
 		HistoryBfs back = his;
 		for (int i = 0; i < backCnt; i++) {
 			if (back == null) {
 				return -1;
 			}
-			back = (HistoryBfs)back.prev();
+			back = (HistoryBfs) back.prev();
 		}
 		if (back == null) {
 			return -1;
 		}
 		return his.rank - back.rank - aveWH2;
 	}
-	
+
 	private int getAllDistance() {
 
 		int d = Board.Utils.getAllDistance(board);
@@ -220,7 +214,6 @@ public final class DigDagBfs extends DigDag {
 		return p;
 	}
 
-	
 	private int calcRank(Command cmd, Command[] cmds, Panel targetPanel, Panel p) {
 
 		// close:0 < far
@@ -329,11 +322,11 @@ public final class DigDagBfs extends DigDag {
 	}
 
 	private int cntAlignedNums(Panel targetPanel, boolean asc) {
-		// FIXME change score if 
+		// FIXME change score if
 		Panel[][] panels = board.panels;
 
 		int cnt = 0;
-		
+
 		// Horizontal
 		int currCdIndex = panels[0][0].code.index();
 		for (int y = 0; y < panels.length; y++) {
@@ -359,7 +352,7 @@ public final class DigDagBfs extends DigDag {
 				}
 			}
 		}
-		
+
 		return cnt;
 	}
 

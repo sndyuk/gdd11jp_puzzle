@@ -25,7 +25,7 @@ public class MemBase extends HistoryBase {
 
         protected MemCollection(String name) {
             super(name);
-            sByDagCodeMap = new HashMap<>(initialCapacity, 0.9f);
+            sByDagCodeMap = new HashMap<>(initialCapacity, 0.7f);
         }
 
         @Override
