@@ -1,2 +1,3 @@
-ヒープ2Gで4900/5000程度の回答率
-com.sndyuk.puzzle.digdag.DigDagの閾値を上げてくと4995/5000程度(ヒープ6G)
+StringのキャッシュからBitSet（0x00FFまでの制限あり）のキャッシュに換えたら。ヒープ使用量が1/3になった
+ヒープ1Gで4900/5000程度の回答率
+com.sndyuk.puzzle.digdag.DigDagの閾値を上げてくと4995/5000程度(ヒープ2G)
