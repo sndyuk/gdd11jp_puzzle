@@ -1,13 +1,12 @@
 package com.sndyuk.puzzle.digdag.dfs;
 
-import java.util.BitSet;
-
 import com.sndyuk.puzzle.parts.Command;
+import com.sndyuk.puzzle.parts.DagCode;
 import com.sndyuk.puzzle.parts.History;
 
 class HistoryDfs extends History {
 
-    public HistoryDfs(BitSet dagCode, Command cmd, History prev, int depth) {
+    public HistoryDfs(DagCode dagCode, Command cmd, History prev, int depth) {
         super(dagCode, cmd, prev, depth);
         // TODO Auto-generated constructor stub
     }

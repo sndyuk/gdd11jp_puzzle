@@ -11,6 +11,7 @@ import com.sndyuk.puzzle.digdag.DigDag;
 import com.sndyuk.puzzle.digdag.TiredException;
 import com.sndyuk.puzzle.parts.Board;
 import com.sndyuk.puzzle.parts.Command;
+import com.sndyuk.puzzle.parts.DagCode;
 import com.sndyuk.puzzle.parts.History;
 import com.sndyuk.puzzle.parts.Panel;
 
@@ -26,7 +27,7 @@ public final class DigDagBfs extends DigDag {
 
 	// ---
 	private final int removeCacheSize;
-	private final BitSet goalId;
+	private final DagCode goalId;
 	private final int maxDepth;
 	private final int maxCacheSizeByDepth;
 	private final int aveWH2;
@@ -44,7 +45,7 @@ public final class DigDagBfs extends DigDag {
 				0, board.panels.length)) {
 			this.maxCacheSizeByDepth = TRESHOLD;
 		} else {
-			this.maxCacheSizeByDepth = TRESHOLD / 10;
+			this.maxCacheSizeByDepth = TRESHOLD / 13;
 		}
 		this.goalId = Board.Utils.createFinalForm(start).createUniqueId();
 		
@@ -52,7 +53,7 @@ public final class DigDagBfs extends DigDag {
 		this.maxDepth = 180;
 		this.removeCacheSize = 9;
 		int cSize = size - (Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0, board.panels.length) * 2);
-		this.allCacheCntDown = cSize <= 20 ? 15 : cSize <= 24 ? 13 : 11;
+		this.allCacheCntDown = cSize <= 20 ? 19 : cSize <= 24 ? 17 : 13;
 		this.rmCacheIndex = 0;
 
 		this.queue = new LinkedList<>();

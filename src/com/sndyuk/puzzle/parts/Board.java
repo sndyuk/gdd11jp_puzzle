@@ -1,7 +1,6 @@
 package com.sndyuk.puzzle.parts;
 
 import java.util.Arrays;
-import java.util.BitSet;
 
 public final class Board {
 
@@ -49,20 +48,8 @@ public final class Board {
         return panels[y][x];
     }
 
-    public BitSet createUniqueId() {
-
-        byte[] barr = new byte[panels.length * panels[0].length];
-        int i = 0;
-        for (int y = 0; y < panels.length; y++) {
-            for (int x = 0; x < panels[y].length; x++) {
-                char h = panels[y][x].code.hash;
-                if (h > 0x00FF) {
-                    throw new UnsupportedOperationException();
-                }
-                barr[i++] = (byte)panels[y][x].code.hash;
-            }
-        }
-        return BitSet.valueOf(barr);
+    public DagCode createUniqueId() {
+        return new DagCode(panels);
     }
 
     public String toString() {

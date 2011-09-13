@@ -1,13 +1,13 @@
 package com.sndyuk.puzzle.digdag;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
 import com.sndyuk.puzzle.parts.Board;
 import com.sndyuk.puzzle.parts.Code;
 import com.sndyuk.puzzle.parts.Dag;
+import com.sndyuk.puzzle.parts.DagCode;
 import com.sndyuk.puzzle.parts.History;
 import com.sndyuk.puzzle.parts.Panel;
 import com.sndyuk.puzzle.util.db.HistoryBase;
@@ -16,7 +16,7 @@ import com.sndyuk.puzzle.util.db.MemBase;
 
 public abstract class DigDag implements Iterable<List<History>>, Iterator<List<History>>, AutoCloseable {
 
-	public static final int TRESHOLD = 29800;
+	public static final int TRESHOLD = 77777;
 	
     private static int suffixNo = 0;
 
@@ -52,7 +52,7 @@ public abstract class DigDag implements Iterable<List<History>>, Iterator<List<H
 
     public abstract History getGoal();
 
-    protected History getHistory(BitSet dagCode) {
+    protected History getHistory(DagCode dagCode) {
         return coll.find(dagCode);
     }
 
