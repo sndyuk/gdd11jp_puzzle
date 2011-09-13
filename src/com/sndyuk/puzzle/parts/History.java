@@ -1,14 +1,15 @@
 package com.sndyuk.puzzle.parts;
+import java.util.BitSet;
 import java.util.Iterator;
 
 
 public abstract class History {
     public final int depth;
-    public final String dagCode;
+    public final BitSet dagCode;
     public final Command cmd;
     private History prev;
 
-    public History(String dagCode, Command cmd, History prev, int depth) {
+    public History(BitSet dagCode, Command cmd, History prev, int depth) {
         this.dagCode = dagCode;
         this.cmd = cmd;
         this.prev = prev;

@@ -1,5 +1,6 @@
 package com.sndyuk.puzzle.util.db;
 
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class MemBase extends HistoryBase {
 
     class MemCollection extends HistoryCollection {
 
-        private HashMap<String, History> sByDagCodeMap;
+        private HashMap<BitSet, History> sByDagCodeMap;
 
         protected MemCollection(String name) {
             super(name);
@@ -43,7 +44,7 @@ public class MemBase extends HistoryBase {
         }
 
         @Override
-        public History find(String dagCode) {
+        public History find(BitSet dagCode) {
             return sByDagCodeMap.get(dagCode);
         }
 
@@ -60,7 +61,7 @@ public class MemBase extends HistoryBase {
             insert(history, 0);
         }
 
-        private void remove(String dagCode) {
+        private void remove(BitSet dagCode) {
             sByDagCodeMap.remove(dagCode);
             return;
         }

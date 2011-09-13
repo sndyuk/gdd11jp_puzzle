@@ -1,12 +1,13 @@
 package com.sndyuk.puzzle.parts;
-import java.util.Arrays;
 
+import java.util.Arrays;
+import java.util.BitSet;
 
 public final class Board {
 
     public final Panel[][] panels;
     public final Panel cmdablePanel;
-    
+
     private Board(Code[][] board) {
         Panel tmp = null;
         panels = new Panel[board.length][];
@@ -47,29 +48,52 @@ public final class Board {
         }
         return panels[y][x];
     }
-    
-    public String createUniqueId() {
 
-        StringBuilder sb = new StringBuilder();
+    public BitSet createUniqueId() {
+
+        byte[] barr = new byte[panels.length * panels[0].length];
+        int i = 0;
         for (int y = 0; y < panels.length; y++) {
             for (int x = 0; x < panels[y].length; x++) {
-                sb.append(panels[y][x].code.hash);
+                char h = panels[y][x].code.hash;
+                if (h > 0x00FF) {
+                    throw new UnsupportedOperationException();
+                }
+                barr[i++] = (byte)panels[y][x].code.hash;
             }
         }
-        return sb.toString();
+        return shrink(barr);
     }
-    
+
+    private BitSet shrink(byte[] barr) {
+
+        // try {
+        // Deflater compresser = new Deflater(Deflater.FILTERED);
+        // ByteArrayOutputStream out = new ByteArrayOutputStream();
+        // DeflaterOutputStream dos = new DeflaterOutputStream(out,
+        // compresser);
+        // for (char c : carr) {
+        // dos.write(c);
+        // }
+        // dos.finish();
+
+        return BitSet.valueOf(barr);
+        // } catch (Exception e) {
+        // throw new RuntimeException(e);
+        // }
+    }
+
     public String toString() {
 
         StringBuilder sb = new StringBuilder();
         for (int y = 0; y < panels.length; y++) {
-        	sb.append("\n");
+            sb.append("\n");
             for (int x = 0; x < panels[y].length; x++) {
                 sb.append(panels[y][x].code);
             }
         }
         sb.append("\n");
-        
+
         return sb.toString();
     }
 
@@ -99,21 +123,21 @@ public final class Board {
             int xFrom = 0, xTo = 0, yFrom = 0, yTo = 0;
             if (p.x > x) {
                 xFrom = x;
-                xTo= p.x;
+                xTo = p.x;
             } else {
                 xFrom = p.x;
-                xTo= x;
+                xTo = x;
             }
             if (p.y > y) {
                 yFrom = y;
-                yTo= p.y;
+                yTo = p.y;
             } else {
                 yFrom = p.y;
-                yTo= y;
+                yTo = y;
             }
             return Math.abs(p.x - x) + Math.abs(p.y - y) + getBlockCnt(board, xFrom, xTo, yFrom, yTo);
         }
-        
+
         public static int getBlockCnt(Board board, int xFrom, int xTo, int yFrom, int yTo) {
             int blockCnt = 0;
             Panel[][] panels = board.panels;
@@ -127,7 +151,7 @@ public final class Board {
             }
             return blockCnt;
         }
-        
+
         public static Board createBoard(int w, int h, char[] bs, CodeFactory cf) {
 
             Code[] codes = new Code[bs.length];
@@ -147,12 +171,11 @@ public final class Board {
                 }
             }
 
-            
             return new Board(board);
         }
 
         public static Code[] toFinalCodeArr(Board board) {
-            
+
             Panel[][] panels = board.panels;
             Code[] copy = new Code[panels.length * panels[0].length];
             for (int y = 0, index = 0; y < panels.length; y++) {
@@ -165,7 +188,7 @@ public final class Board {
                     copy[index++] = c;
                 }
             }
-            
+
             Arrays.sort(copy);
 
             // Change stub to block
@@ -178,10 +201,10 @@ public final class Board {
                     index++;
                 }
             }
-            
+
             return copy;
         }
-        
+
         public static char[] toCharArr(Code[] codes) {
             char[] copy = new char[codes.length];
             for (int i = 0; i < codes.length; i++) {
@@ -189,7 +212,7 @@ public final class Board {
             }
             return copy;
         }
-        
+
         public static Board createFinalForm(Board board) {
 
             Panel[][] panels = board.panels;
@@ -197,32 +220,18 @@ public final class Board {
             return makeBoard(panels[0].length, panels.length, copy);
         }
 
-		public static String toString(Board board, String dagCode) {
-			int x = board.panels[0].length;
-			StringBuilder sb = new StringBuilder(dagCode.length());
-			int i = 0;
-			for (char c : dagCode.toCharArray()) {
-				sb.append(c);
-				i++;
-				if (i % x == 0) {
-					sb.append('\n');
-				}
-			}
-			return sb.toString();
-		}
-        
-//        public static long getMaxDirection(Board board) {
-//            long max = fact(board.panels.length * board.panels[0].length) / 2;
-//            if (max < 0) {
-//                return Long.MAX_VALUE;
-//            }
-//            return max;
-//        }
-//        
-//        private static long fact(long n) {
-//            if (n == 0)
-//                return 1;
-//            return n * fact(n - 1);
-//        }
+        // public static long getMaxDirection(Board board) {
+        // long max = fact(board.panels.length * board.panels[0].length) / 2;
+        // if (max < 0) {
+        // return Long.MAX_VALUE;
+        // }
+        // return max;
+        // }
+        //
+        // private static long fact(long n) {
+        // if (n == 0)
+        // return 1;
+        // return n * fact(n - 1);
+        // }
     }
 }

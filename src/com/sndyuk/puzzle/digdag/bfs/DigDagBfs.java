@@ -1,6 +1,7 @@
 package com.sndyuk.puzzle.digdag.bfs;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -24,7 +25,7 @@ public final class DigDagBfs extends DigDag {
 	private int allCacheCntDown;
 
 	// ---
-	private final String goalId;
+	private final BitSet goalId;
 	private final int maxDepth;
 	private final int maxCacheSizeByDepth;
 	private final int aveWH2;
@@ -49,8 +50,8 @@ public final class DigDagBfs extends DigDag {
 //				- (Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0,
 //						board.panels.length) * 2);
 //		this.allCacheCntDown = cSize <= 20 ? 18 : cSize <= 24 ? 20 : 14;
-		this.allCacheCntDown = 13;
-		this.cacheAllUntil = 5;
+		this.allCacheCntDown = 12;
+		this.cacheAllUntil = 16;
 
 		this.queue = new LinkedList<>();
 		this.tmpQueue = new PriorityQueue<>();
@@ -88,7 +89,7 @@ public final class DigDagBfs extends DigDag {
 						for (HistoryBfs his : removeCache) {
 							removeHistory(his);
 						}
-						cacheAllUntil = 13;
+						cacheAllUntil = 16;
 					}
 				}
 
@@ -109,8 +110,6 @@ public final class DigDagBfs extends DigDag {
 				System.out.println(digCnt + " : " + currHis.depth + " :rank "
 						+ topRank.rank + " :" + this.hashCode());
 				System.out.println("direction asc: " + topRank.asc);
-				System.out.println(board.cmdablePanel.code.getCharMapString());
-				System.out.println(Board.Utils.toString(board, topRank.dagCode));
 				
 				removeCache.addAll(queue);
 				if (allCacheCntDown <= 0) {

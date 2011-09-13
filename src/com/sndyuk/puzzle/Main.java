@@ -4,18 +4,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.sndyuk.puzzle.digdag.DigDagTask;
-import com.sndyuk.puzzle.digdag.dfs.DigDagDfs;
 import com.sndyuk.puzzle.parts.Board;
 import com.sndyuk.puzzle.parts.CodeFactory;
 import com.sndyuk.puzzle.parts.Command;
 import com.sndyuk.puzzle.parts.Dag;
-import com.sndyuk.puzzle.parts.History;
 import com.sndyuk.puzzle.util.CmdCounter;
 
 public final class Main {
@@ -440,7 +437,8 @@ public final class Main {
 				SERVICE.shutdownNow();
 			}
 		} else {
-			String result = solveByDFS(w, h, puzzle);
+			String result = "";
+//			        solveByDFS(w, h, puzzle);
 
 			System.out.println(result);
 			if (validate(w, h, puzzle, result)) {
@@ -484,31 +482,31 @@ public final class Main {
 		}
 	}
 
-	private static String solveByDFS(int w, int h, String puzzle) {
-
-		CodeFactory defaultCf = CodeFactory.getDefaultCodeFactory();
-		Board board = Board.Utils.createBoard(w, h, puzzle.toCharArray(),
-				defaultCf);
-
-		try (DigDagDfs digdag = new DigDagDfs(board)) {
-
-			History his = null;
-			while (digdag.hasNext()) {
-				digdag.next().get(0);
-
-			}
-			if (digdag.getGoal() == null) {
-				return null;
-			}
-
-			StringBuilder cmdSb = new StringBuilder();
-			for (Iterator<Command> cmdIterator = History.Utils
-					.createCommandIterator(his); cmdIterator.hasNext();) {
-				cmdSb.append(cmdIterator.next());
-			}
-			return cmdSb.reverse().toString();
-		}
-	}
+//	private static String solveByDFS(int w, int h, String puzzle) {
+//
+//		CodeFactory defaultCf = CodeFactory.getDefaultCodeFactory();
+//		Board board = Board.Utils.createBoard(w, h, puzzle.toCharArray(),
+//				defaultCf);
+//
+//		try (DigDagDfs digdag = new DigDagDfs(board)) {
+//
+//			History his = null;
+//			while (digdag.hasNext()) {
+//				digdag.next().get(0);
+//
+//			}
+//			if (digdag.getGoal() == null) {
+//				return null;
+//			}
+//
+//			StringBuilder cmdSb = new StringBuilder();
+//			for (Iterator<Command> cmdIterator = History.Utils
+//					.createCommandIterator(his); cmdIterator.hasNext();) {
+//				cmdSb.append(cmdIterator.next());
+//			}
+//			return cmdSb.reverse().toString();
+//		}
+//	}
 
 	public static void main6(String[] args) throws Exception {
 		

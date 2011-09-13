@@ -1,6 +1,7 @@
 package com.sndyuk.puzzle.digdag;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public abstract class DigDag implements Iterable<List<History>>, Iterator<List<H
 
     public abstract History getGoal();
 
-    protected History getHistory(String dagCode) {
+    protected History getHistory(BitSet dagCode) {
         return coll.find(dagCode);
     }
 

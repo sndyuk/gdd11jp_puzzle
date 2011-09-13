@@ -1,5 +1,6 @@
 package com.sndyuk.puzzle.parts;
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.List;
 
 public final class Dag {
@@ -55,7 +56,7 @@ public final class Dag {
         return cmd.back(board);
     }
     
-    public String createUniqueId() {
+    public BitSet createUniqueId() {
         return board.createUniqueId();
     }
 
