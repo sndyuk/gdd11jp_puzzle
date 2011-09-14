@@ -124,7 +124,9 @@ public final class DigDagBfs extends DigDag {
 
 		Command[] cmds = dag.getAvailableCommands(currHis);
 		List<History> hisList = new ArrayList<>(2);
-		next(cmds, hisList);
+		if (cmds != null) {
+			next(cmds, hisList);
+		}
 		return hisList;
 	}
 
@@ -147,6 +149,7 @@ public final class DigDagBfs extends DigDag {
 		Panel p = forward(cmd); // and set new currHis instance.
 		if (goalId.equals(currHis.dagCode)) {
 			goal = currHis; // found
+			return;
 		}
 
 		int rank = calcRank(cmd, cmds, targetPanel, p);

@@ -5,7 +5,16 @@ import java.util.Map;
 
 
 public class CodeFactory {
-
+//    code array for ping drum
+//	  private static final char[] DEFAULT_CHAR_MAP = {
+//        '\u0001', '\u0002','\u0003','0', '1', '2', '3', '4', '5', '6',
+//        '7', '8', '9', 'A', 'B', 'C',
+//        'D', 'E', 'F', 'G', 'H', 'I',
+//        'J', 'K', 'L', 'M', 'N', 'O',
+//        'P', 'Q', 'R', 'S', 'T', 'U',
+//        'V', 'W', 'X', 'Y', 'Z'
+//	  };
+//	  
     private static final char[] DEFAULT_CHAR_MAP = {
         '1', '2', '3', '4', '5', '6',
         '7', '8', '9', 'A', 'B', 'C',
@@ -38,8 +47,8 @@ public class CodeFactory {
 
     public static char[] getDefaultCharMap(int size) {
         char[] newArr = new char[size];
-        System.arraycopy(DEFAULT_CHAR_MAP, 0, newArr, 0, size - 1);
-        newArr[size - 1] = ZERO;
+        System.arraycopy(DEFAULT_CHAR_MAP, 0, newArr, 0, size);
+//        newArr[size - 1] = ZERO;
         return newArr;
     }
     
