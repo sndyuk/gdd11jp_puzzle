@@ -1,7 +1,6 @@
 package com.sndyuk.puzzle.digdag.bfs;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -31,29 +30,36 @@ public final class DigDagBfs extends DigDag {
 	private final int maxDepth;
 	private final int maxCacheSizeByDepth;
 	private final int aveWH2;
+	private final int type;
+	
+	private static final int TYPE_NOMAL = 0;
+	private static final int TYPE_BLOCK = 1;
 	// ---
 	private LinkedList<HistoryBfs> queue;
 	private Queue<HistoryBfs> tmpQueue;
 	@SuppressWarnings("rawtypes")
 	private List[] removeCache;
-
+	
 	public DigDagBfs(Board start, boolean asc) {
 		super(start);
 
-		this.aveWH2 = ((board.panels.length + board.panels[0].length) / 2) * 2;
-		if (aveWH2 <= Board.Utils.getBlockCnt(start, 0, board.panels[0].length,
+		int aveWH = (board.panels.length + board.panels[0].length) / 2;
+		if (aveWH <= Board.Utils.getBlockCnt(start, 0, board.panels[0].length,
 				0, board.panels.length)) {
 			this.maxCacheSizeByDepth = TRESHOLD;
 		} else {
-			this.maxCacheSizeByDepth = TRESHOLD / 13;
+			this.maxCacheSizeByDepth = TRESHOLD / 10;
 		}
+		this.aveWH2 = aveWH * 2 + 1;
 		this.goalId = Board.Utils.createFinalForm(start).createUniqueId();
 		
 		// this.maxDepth = getAllDistance() + (size * 6); //take it to
 		this.maxDepth = 180;
-		this.removeCacheSize = 9;
-		int cSize = size - (Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0, board.panels.length) * 2);
-		this.allCacheCntDown = cSize <= 20 ? 19 : cSize <= 24 ? 17 : 13;
+		int blockCnt = Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0, board.panels.length);
+		int cSize = size - blockCnt;
+		type = ((float)blockCnt / (float)size) > 0.1f ? TYPE_BLOCK : TYPE_NOMAL;
+		this.allCacheCntDown = cSize <= 20 ? 11 : cSize <= 24 ? 9 : 7;
+		this.removeCacheSize = 5 + blockCnt;
 		this.rmCacheIndex = 0;
 
 		this.queue = new LinkedList<>();
@@ -102,11 +108,12 @@ public final class DigDagBfs extends DigDag {
 				queue = new LinkedList<>(tmpQueue);
 				HistoryBfs depthTop = queue.getLast();
 				topRank = depthTop;
-
-				System.out.println(digCnt + " : " + currHis.depth + " :rank "
-						+ topRank.rank + " :" + this.hashCode());
-				System.out.println("direction asc: " + topRank.asc);
-
+				
+				if (currHis.depth % 30 == 0) {
+	                                System.out.println(digCnt + " : " + currHis.depth + " :rank "
+                                                + topRank.rank + " :" + this.hashCode());
+	                                System.out.println("direction asc: " + topRank.asc);
+				}
 				if (allCacheCntDown <= 0) {
 					tmpQueue = new PriorityQueue<>(maxCacheSizeByDepth + 1);
 					removeCache[rmCacheIndex++] = new ArrayList<>(queue);
@@ -280,8 +287,10 @@ public final class DigDagBfs extends DigDag {
 			rank -= 3;
 		}
 
-		// bonus ----- ordered code
-		rank -= cntAlignedNums(targetPanel, currHis.asc) * 2;
+		if (type == TYPE_BLOCK) {
+	                // bonus ----- ordered code
+	                rank -= cntAlignedNums(targetPanel, currHis.asc) * 2;
+		}
 
 		return rank;
 	}

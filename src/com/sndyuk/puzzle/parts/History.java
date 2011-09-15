@@ -6,7 +6,8 @@ public abstract class History {
     public final int depth;
     public final DagCode dagCode;
     public final Command cmd;
-    private History prev;
+    // ---
+    private final History prev;
 
     public History(DagCode dagCode, Command cmd, History prev, int depth) {
         this.dagCode = dagCode;

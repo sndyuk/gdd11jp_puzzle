@@ -2,6 +2,7 @@ package com.sndyuk.puzzle.parts;
 
 public final class Panel {
     public final Code code;
+    
     protected int x;
     protected int y;
     protected final int tx;

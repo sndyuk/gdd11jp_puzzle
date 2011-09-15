@@ -16,7 +16,7 @@ import com.sndyuk.puzzle.util.db.MemBase;
 
 public abstract class DigDag implements Iterable<List<History>>, Iterator<List<History>>, AutoCloseable {
 
-	public static final int TRESHOLD = 77777;
+	public static final int TRESHOLD = 7777;
 	
     private static int suffixNo = 0;
 
@@ -33,7 +33,7 @@ public abstract class DigDag implements Iterable<List<History>>, Iterator<List<H
         this.board = start;
         this.size = start.panels.length * start.panels[0].length;
         this.collectionId = HistoryBase.DBNAME + (++suffixNo);
-        this.db = new MemBase(TRESHOLD / 13);
+        this.db = new MemBase();
         this.coll = db.getCollection(collectionId);
     }
 

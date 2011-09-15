@@ -28,10 +28,11 @@ public final class Main {
 		int endIndex = Integer.parseInt(args[3]);
 		String validationPath = args[4];
 
+		long startAll = System.currentTimeMillis();
 		CmdCounter cmdTotal = new CmdCounter();
 
 		int zU = 0, zR = 0, zD = 0, zL = 0;
-
+		int answered = 0;
 		int i = 0;
 		int cnt = 0;
 		try (BufferedReader br = new BufferedReader(new FileReader(inputPath));
@@ -94,6 +95,8 @@ public final class Main {
 						continue;
 					}
 
+					answered++;
+					
 					System.out.println(result);
 
 					bw.append(result);
@@ -135,6 +138,9 @@ public final class Main {
 		} finally {
 			SERVICE.shutdownNow();
 			
+			System.out.println("ans: " + answered);
+                        System.out.println("total: " + (System.currentTimeMillis() - startAll) / 1000 + " sec");
+                        
 			System.out
 					.println("ALL U: " + cmdTotal.getU() + " / " + zU);
 			System.out

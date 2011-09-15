@@ -1,6 +1,5 @@
 package com.sndyuk.puzzle.util.db;
 
-import java.util.HashMap;
 import java.util.List;
 
 import com.sndyuk.puzzle.parts.DagCode;
@@ -8,10 +7,10 @@ import com.sndyuk.puzzle.parts.History;
 
 public class MemBase extends HistoryBase {
 
-    private final int initialCapacity;
+    private final int capacity;
     
-    public MemBase(int initialCapacity) {
-        this.initialCapacity = initialCapacity;
+    public MemBase() {
+        this.capacity = 0xFFFFFF;
     }
 
     @Override
@@ -21,11 +20,11 @@ public class MemBase extends HistoryBase {
 
     class MemCollection extends HistoryCollection {
 
-        private HashMap<DagCode, History> sByDagCodeMap;
+        private HistoryMap sByDagCodeMap;
 
         protected MemCollection(String name) {
             super(name);
-            sByDagCodeMap = new HashMap<>(initialCapacity, 0.7f);
+            sByDagCodeMap = new HistoryMap(capacity);
         }
 
         @Override
@@ -73,7 +72,8 @@ public class MemBase extends HistoryBase {
 
         @Override
         public void removeAll() {
-            sByDagCodeMap.clear();
+            sByDagCodeMap = null;
+            sByDagCodeMap = new HistoryMap(capacity);
             return;
         }
     }
