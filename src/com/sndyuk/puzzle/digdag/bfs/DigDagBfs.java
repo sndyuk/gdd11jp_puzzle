@@ -47,8 +47,10 @@ public final class DigDagBfs extends DigDag {
 		if (aveWH <= Board.Utils.getBlockCnt(start, 0, board.panels[0].length,
 				0, board.panels.length)) {
 			this.maxCacheSizeByDepth = TRESHOLD;
+			this.type = TYPE_BLOCK;
 		} else {
 			this.maxCacheSizeByDepth = TRESHOLD / 10;
+			this.type = TYPE_NOMAL;
 		}
 		this.aveWH2 = aveWH * 2 + 1;
 		this.goalId = Board.Utils.createFinalForm(start).createUniqueId();
@@ -57,7 +59,6 @@ public final class DigDagBfs extends DigDag {
 		this.maxDepth = 180;
 		int blockCnt = Board.Utils.getBlockCnt(board, 0, board.panels[0].length, 0, board.panels.length);
 		int cSize = size - blockCnt;
-		type = ((float)blockCnt / (float)size) > 0.1f ? TYPE_BLOCK : TYPE_NOMAL;
 		this.allCacheCntDown = cSize <= 20 ? 11 : cSize <= 24 ? 9 : 7;
 		this.removeCacheSize = 5 + blockCnt;
 		this.rmCacheIndex = 0;
